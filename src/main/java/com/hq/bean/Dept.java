@@ -1,5 +1,5 @@
 package com.hq.bean;
-
+// 部门
 public class Dept {
 	private Integer did;
 	private String dname;
