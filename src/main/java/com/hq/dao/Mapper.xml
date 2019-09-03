@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- mybatis  映射文件
+ 	mapper 是根标签
+ 	namespace 是接口的全路径名称
+  -->
+<mapper namespace="com.hq.dao.UserDAO">
+
+	<select id="list" resultType="map">
+		select * from hq_user left join hq_dept on hq_user.did=hq_dept.did
+		<where>
+			<if test="mohu1 !=null and mohu1!=''">
+				and uname like concat('%',#{mohu1},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="deptList" resultType="Dept">
+		select * from hq_dept
+	</select>
+	<insert id="add" >
+		insert into hq_user values(null,#{uname},#{password},#{score},#{dept.did})
+	</insert>
+	<resultMap type="User" id="userMap">
+		<id column="uid" property="uid"/>
+		<result column="uname" property="uname"/>
+		<result column="password" property="password"/>
+		<result column="score" property="score"/>
+		<association property="dept" javaType="Dept">
+			<id column="did" property="did"/>
+			<result column="dname" property="dname"/>
+		</association>		
+		
+	</resultMap>
+	<select id="getUser" resultMap="userMap">
+		select * from hq_user where uid=#{uid}
+	</select>
+	
+	<update id="upd" >
+		update hq_user 
+		<set>
+			<if test="uname !=null and uname !=''">
+				uname=#{uname},
+			</if>
+			<if test="password !=null and password !=''">
+				password=#{password},
+			</if>
+			<if test="score !=null and score !=''">
+				score=#{score},
+			</if>
+			<if test="dept.did !=null and dept.did !=0">
+				did=#{dept.did},
+			</if>
+		</set>
+		<where>
+			uid=#{uid}
+		</where>
+	
+	</update>
+</mapper>
